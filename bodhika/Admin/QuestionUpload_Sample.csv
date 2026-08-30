@@ -1,0 +1,12 @@
+﻿Exam App - Bulk Question Upload Sample | Do NOT edit rows 1-2 | Data starts from row 3,,,,,,,
+QuestionText,Answer1,Answer2,Answer3,Answer4,CorrectAnswer,Complexity,Explanation
+What is the capital of France?,Berlin,Paris,Madrid,Rome,2,Easy,Paris has been the capital of France since the late 10th century.
+Which planet is known as the Red Planet?,Venus,Jupiter,Mars,Saturn,3,Easy,Mars gets its reddish colour from iron oxide (rust) on its surface.
+What is 12 × 12?,124,144,132,148,2,Easy,12 × 12 = 144.
+Who wrote 'Romeo and Juliet'?,Charles Dickens,Jane Austen,William Shakespeare,Mark Twain,3,Medium,Romeo and Juliet is a tragedy written by William Shakespeare around 1594–1596.
+What is the chemical symbol for water?,O2,CO2,H2O,HO,3,Easy,Water is composed of two hydrogen atoms and one oxygen atom: H2O.
+Which data structure uses LIFO order?,Queue,Linked List,Tree,Stack,4,Medium,A Stack follows Last-In-First-Out (LIFO) — the last element pushed is the first to be popped.
+What is the time complexity of binary search?,O(n),O(n²),O(log n),O(n log n),3,Hard,"Binary search halves the search space each step, giving O(log n) time complexity."
+Which of the following is NOT a primary colour of light?,Red,Green,Yellow,Blue,3,Medium,"The primary colours of light are Red, Green, and Blue (RGB). Yellow is a secondary colour."
+What does SQL stand for?,Structured Query Language,Simple Query Logic,Sequential Query List,Standard Query Layer,1,Medium,"SQL stands for Structured Query Language, used to manage relational databases."
+What is the output of 2 ** 10 in Python?,20,100,512,1024,4,Hard,The ** operator is exponentiation in Python. 2 ** 10 = 1024.

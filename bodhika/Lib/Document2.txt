@@ -1,0 +1,36 @@
+User_event@123
+
+u304752530_user_event
+u304752530_event_track
+
+Demo Accounts (password: Password@123)
+
+Super Admin
+admin@system.local
+
+Tenant Admin (Greenwood)
+margaret@greenwood-community.org
+
+Event Manager (Greenwood)
+robert.chen@greenwood-community.org
+
+Member (Greenwood)
+james.brown@email.com
+
+Tenant Admin (TechVille)
+alex.kumar@techville.io
+
+write a propmt to create a generic multitenant app for The Micro, Small, and Medium Enterprises (MSME) sector in India to digitize their activities.
+The organization should able to register and manage their activities . Make it secure for individual organization based on the roles.
+They should able to track their daya today activities and dashboards should be available for decision making.
+
+Hi All 
+I'm pleased to share that I have successfully cleared the Independent Director Proficiency Test and am now part of the Independent Directors Databank, India.
+
+Over the years, I've had the opportunity to lead growth, operations, transformation, workforce analytics, AI-led initiatives, and GCC engagements across global organizations. As I continue my executive journey, I am also keen to contribute through Board and Advisory roles where I can help organizations navigate growth, technology adoption, governance, risk, and business transformation.
+
+If you come across opportunities related to Independent Director positions, Advisory Boards, GCCs, AI, Technology, Risk, Operations, or Transformation, I would be grateful if you could keep me in mind.
+
+
+
+to inform all departments under village, taluka/District /State Country to make beeter coutry to leave. they should able to register with verification and upload corresponding prrofs fo rthe compaint suggestion they have.

@@ -1,0 +1,19 @@
+<?php
+/**
+ * exam/submit-manual-payment.php — DEPRECATED (migration_v51).
+ *
+ * Subject-level checkout has been retired; manual UPI submission now happens
+ * in exam/submit-manual-payment-exam.php. Nothing in the current UI calls
+ * this endpoint any more. Kept only as a safe stub so a stale client fails
+ * loudly instead of writing to the legacy enrollment_payments ledger.
+ */
+require_once __DIR__ . '/../Lib/Config.php';
+require_once __DIR__ . '/../Lib/Auth.php';
+
+header('Content-Type: application/json');
+
+if (!Auth::isLoggedIn()) { echo json_encode(['error' => 'Not logged in']); exit; }
+
+echo json_encode([
+    'error' => 'Subject-level checkout has been retired. Please enroll from the exam catalogue (Browse & Enroll) instead.',
+]);

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#f4e08a" />
+      <stop offset="30%" stop-color="#cfe86b" />
+      <stop offset="55%" stop-color="#4f9d4a" />
+      <stop offset="80%" stop-color="#12331d" />
+      <stop offset="100%" stop-color="#020604" />
+    </radialGradient>
+    <linearGradient id="petalGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4e79c" />
+      <stop offset="100%" stop-color="#7fae4a" />
+    </linearGradient>
+    <linearGradient id="petalGreen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a9d17a" />
+      <stop offset="100%" stop-color="#245c2f" />
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fdf3c4" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#fdf3c4" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="200" height="200" rx="42" fill="#020603" />
+  <circle cx="100" cy="98" r="92" fill="url(#glow)" />
+
+  <g transform="translate(100,128)">
+    <!-- outer petals -->
+    <g fill="url(#petalGreen)">
+      <path d="M0,-8 C22,-30 30,-64 20,-92 C4,-66 -6,-34 0,-8 Z" transform="rotate(-65)"/>
+      <path d="M0,-8 C22,-30 30,-64 20,-92 C4,-66 -6,-34 0,-8 Z" transform="rotate(-39)"/>
+      <path d="M0,-8 C22,-30 30,-64 20,-92 C4,-66 -6,-34 0,-8 Z" transform="rotate(39)"/>
+      <path d="M0,-8 C22,-30 30,-64 20,-92 C4,-66 -6,-34 0,-8 Z" transform="rotate(65)"/>
+    </g>
+    <g fill="url(#petalGold)">
+      <path d="M0,-10 C16,-34 20,-70 0,-100 C-20,-70 -16,-34 0,-10 Z" transform="rotate(-13)"/>
+      <path d="M0,-10 C16,-34 20,-70 0,-100 C-20,-70 -16,-34 0,-10 Z" transform="rotate(13)"/>
+    </g>
+    <path d="M0,-14 C18,-40 22,-78 0,-112 C-22,-78 -18,-40 0,-14 Z" fill="url(#petalGold)"/>
+
+    <!-- lower leaves / base -->
+    <g fill="url(#petalGreen)">
+      <path d="M0,4 C-26,10 -52,26 -66,50 C-36,48 -12,36 0,18 Z"/>
+      <path d="M0,4 C26,10 52,26 66,50 C36,48 12,36 0,18 Z"/>
+    </g>
+    <ellipse cx="0" cy="46" rx="58" ry="16" fill="url(#petalGreen)"/>
+  </g>
+
+  <!-- halo behind head -->
+  <circle cx="100" cy="88" r="30" fill="url(#halo)"/>
+
+  <!-- meditating figure -->
+  <g fill="#0e2a17">
+    <circle cx="100" cy="90" r="13"/>
+    <circle cx="100" cy="74" r="4.5"/>
+    <path d="M79,104 C79,96 88,104 100,104 C112,104 121,96 121,104 L127,140 C127,156 115,167 100,167 C85,167 73,156 73,140 Z"/>
+    <path d="M73,140 C60,138 50,128 46,116 C50,120 58,124 66,124 Z"/>
+    <path d="M127,140 C140,138 150,128 154,116 C150,120 142,124 134,124 Z"/>
+    <ellipse cx="100" cy="164" rx="44" ry="13"/>
+  </g>
+</svg>

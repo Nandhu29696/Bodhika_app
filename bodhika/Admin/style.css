@@ -1,0 +1,225 @@
+/* CSS Document */
+.lakstoppad{
+  padding-top:10px;
+}
+
+.lakstoppad1{
+  padding-top:1px;
+}
+
+.lakspadleft{
+  padding-left:15px;
+ }
+
+.newlink{
+text-decoration:none;
+font-family:arial,Helvetica, sans-serif;
+font-size:13px;
+}
+
+a.newlink:link{
+color:#fff;
+}
+
+a.newlink:visited{
+color:#fff;
+}
+
+a.newlink:hover{
+color:#fff3ab;
+}
+
+.bdyfont{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  color:333;
+  font-size:13px;
+  }
+  
+.textfield {
+	text-decoration: none;
+	background-color: #FFFFFF;
+	border: 1px solid #649CE2;
+	height:18px;
+	font-weight:normal;
+	
+}
+
+.textarea {
+	border: 1px solid #649CE2;
+}
+
+.lakpadright{
+	padding-top:15px;
+	padding-right:15px;
+}
+
+
+.leftnav {
+	background-color: #0085BE;
+	
+}
+
+.tbldt
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  background:#FFFFFF;
+  color:#000000;
+  font-size:12px;
+  padding-left:5px;
+  height:22px;
+  }
+
+
+  .tbllbl
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  background:#FFFFFF;
+  color:#000000;
+  font-size:12px;
+  padding-left:5px;
+  height:22px;
+  font-weight:bold
+  }
+
+
+  .tblvalue
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  background:#FFFFFF;
+  color:#336699;
+  font-size:12px;
+  padding-left:5px;
+  height:22px;
+  }
+
+
+.tblhdr
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  <!-- background-image:url("../Images/buttonbg.gif"); -->
+background:#762F00;
+  color:#FFFFFF;
+  font-size:12px;
+  font-weight:bold;
+  padding-left:5px;
+  }
+
+
+
+
+
+
+.btnbg
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  background:#BF6C35;
+  color:#ffffff;
+  font-size:12px;
+  font-weight:bold;
+  padding-bottom:4px;
+  }
+
+  
+
+
+.HeaderStyle
+{
+	background-color:#999999;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.RowStyle
+{
+	background-color:#F7F6F3;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+.AlternateRowStytle
+{
+	background-color:#FFFFFF;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+
+a.bodynav{
+color:#0085BE;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+		font-weight:bold;
+		text-decoration: none;
+		padding-left:5px;
+}
+
+a.bodynav:hover{
+color:#999999;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:bold;
+			padding-left:5px;
+}
+
+
+a.LeftN{
+color:#0085BE;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:13px;
+		font-weight:bold;
+		text-decoration: none;
+		padding-left:5px;
+}
+
+a.LeftN:hover{
+color:#999999;
+font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:13px;
+	font-weight:bold;
+			padding-left:5px;
+}
+
+
+
+.tblhdr1
+{
+  font-family:Verdana, Arial, Helvetica, sans-serif;
+  <!-- background-image:url("../Images/buttonbg.gif"); -->
+background:#999999;
+  color:#FFFFFF;
+  font-size:12px;
+  font-weight:bold;
+  padding-left:5px;
+  }
+
+/* ── Mobile responsiveness shim (legacy Admin/*.php pages) ───────────────
+   These pages predate assets/style.css's .app-shell/media-query system:
+   no viewport tag (added separately in Admin/Includes/Top.php) and every
+   layout is a hardcoded-pixel-width HTML table (width="1000px"/"1024"/etc,
+   see Top.php and e.g. Admin/ExamSearch.php), which forces the whole page
+   to render at desktop width and rely on pinch-zoom on a phone. This is a
+   CSS-only fix, not a redesign: below 1024px every width-attributed table
+   is allowed to shrink to the viewport instead of its hardcoded pixel
+   width, and any table too wide to reflow (dense data grids) scrolls
+   horizontally within its own box rather than blowing out the page. Text
+   and admin-nav are bumped up slightly so they're still legible/tappable
+   once everything is narrower. */
+@media (max-width: 1024px) {
+  table[width]        { width: 100% !important; max-width: 100% !important; }
+  table[width] > tbody > tr > td,
+  table[width] > tr > td { max-width: 100vw; }
+  .bdyfont, .tbldt, .tbllbl, .tblvalue, .tblhdr, .tblhdr1 { font-size: 14px !important; }
+  .adminnav { flex-wrap: wrap; }
+  .adminnav > li > a { padding: 9px 10px; }
+  /* Dropdown mega-menus are positioned for a wide desktop row; under 1024px
+     let them size to content instead of assuming there's room to the right. */
+  .adminnav .dropdown { min-width: 160px; max-width: 90vw; }
+}
+@media (max-width: 640px) {
+  /* Any table/div that still ends up wider than the screen (dense report
+     grids, wide data tables) scrolls horizontally in place instead of
+     forcing the whole page to scroll sideways. overflow-x alone (no
+     display:block) so the table's own layout algorithm is untouched —
+     just its bounding box gains a scrollbar when content doesn't fit. */
+  table[width] { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}

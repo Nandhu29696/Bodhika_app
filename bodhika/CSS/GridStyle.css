@@ -1,0 +1,30 @@
+.HeaderStyle
+{
+	background-color:#5D7B9D;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:small;
+	color:#FFFFFF;
+	font-weight:bold;
+}
+.RowStyle
+{
+	background-color:#F7F6F3;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:small;
+	font-weight:bold;
+}
+.AlternateRowStytle
+{
+	background-color:#FFFFFF;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:small;
+	font-weight:bold;
+}
+.highlight
+{
+	background-color:#5D7B9D;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:small;
+	color:#FFFFFF;
+	font-weight:bold;
+}
