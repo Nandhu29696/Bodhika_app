@@ -18,13 +18,12 @@ class Database
 
     private function __construct()
     {
-        $port = defined('DB_PORT') && DB_PORT ? ';port=' . DB_PORT : '';
         $dsn = sprintf(
-            'mysql:host=%s;dbname=%s;charset=%s%s',
+            'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             DB_HOST,
+            DB_PORT,
             DB_NAME,
-            DB_CHARSET,
-            $port
+            DB_CHARSET
         );
 
         $options = [

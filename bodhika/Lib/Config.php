@@ -88,44 +88,20 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);   // ← change to 0 in production
 ini_set('log_errors',     1);
 
-// ── 4. Environment bootstrap ───────────────────────────────────────────────
-// Load .env from the project root if present so local config can be kept out of
-// source control while still working with standard DB_* variable names.
-if (!function_exists('load_env_file')) {
-    function load_env_file(): void
-    {
-        $candidates = [
-            dirname(__DIR__) . '/.env',
-            __DIR__ . '/.env',
-            dirname(__DIR__, 2) . '/.env',
-        ];
-
-        foreach ($candidates as $file) {
-            if (is_file($file)) {
-                $values = parse_ini_file($file, true, INI_SCANNER_TYPED);
-                if (is_array($values)) {
-                    foreach ($values as $key => $value) {
-                        if (is_array($value)) {
-                            continue;
-                        }
-                        $_ENV[$key] = (string) $value;
-                        putenv($key . '=' . (string) $value);
-                    }
-                }
-                break;
-            }
-        }
-    }
-}
-load_env_file();
-
+// ── 4. Constants ──────────────────────────────────────────────────────────────
 // Database
-define('DB_HOST', getenv('DB_HOST') ?: getenv('DB_HOSTNAME') ?: 'localhost');
-define('DB_PORT', getenv('DB_PORT') ?: '3306');
-define('DB_NAME', getenv('DB_DATABASE') ?: getenv('DB_NAME') ?: 'bodhika_mcqdb');
-define('DB_USER', getenv('DB_USERNAME') ?: getenv('DB_USER') ?: 'myapp_user');
-define('DB_PASS', getenv('DB_PASSWORD') ?: getenv('DB_PASS') ?: 'Dapoli@19750');
+// Prefer the new env names used by the deployment setup, but keep the legacy
+// DB_NAME / DB_USER / DB_PASS aliases so the existing app code keeps working.
+define('DB_HOST',    getenv('DB_HOST') ?: 'localhost');
+define('DB_PORT',    getenv('DB_PORT') ?: '3306');
+define('DB_DATABASE', getenv('DB_DATABASE') ?: 'bodhika_mcqdb');
+define('DB_USERNAME', getenv('DB_USERNAME') ?: 'myapp_user');
+define('DB_PASSWORD', getenv('DB_PASSWORD') ?: 'Dapoli@19750');
 define('DB_CHARSET', getenv('DB_CHARSET') ?: 'utf8mb4');
+
+define('DB_NAME', DB_DATABASE);
+define('DB_USER', DB_USERNAME);
+define('DB_PASS', DB_PASSWORD);
 
 // Application
 define('APP_NAME',          'Bodhika');
