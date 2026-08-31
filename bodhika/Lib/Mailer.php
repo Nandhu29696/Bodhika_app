@@ -17,6 +17,13 @@
  */
 class Mailer
 {
+    private static function ensureAppSettingsLoaded(): void
+    {
+        if (!class_exists('AppSettings', false)) {
+            require_once __DIR__ . '/AppSettings.php';
+        }
+    }
+
     /**
      * Send an HTML email, with an auto-derived plain-text alternative.
      *
@@ -32,6 +39,7 @@ class Mailer
         string $to, string $subject, string $bodyHtml,
         string $bodyText = '', string $toName = ''
     ): bool {
+        self::ensureAppSettingsLoaded();
         if ($to === '' || !filter_var($to, FILTER_VALIDATE_EMAIL)) return false;
 
         $settings = AppSettings::getMany([

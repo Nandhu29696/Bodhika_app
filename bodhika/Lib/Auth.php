@@ -455,6 +455,193 @@ class Auth
         session_destroy();
     }
 
+    /**
+     * Ensure the reset-token columns exist on logininfo. If the database is a
+     * few migrations behind, add them at runtime so the feature still works.
+     */
+    public static function ensurePasswordResetColumns(): void
+    {
+        if (!Database::tableExists('logininfo')) {
+            return;
+        }
+
+        if (!Database::hasColumn('logininfo', 'reset_token')) {
+            try {
+                Database::execute(
+                    "ALTER TABLE logininfo ADD COLUMN reset_token VARCHAR(255) NULL AFTER Password"
+                );
+            } catch (Exception $e) {
+                error_log('Auth::ensurePasswordResetColumns reset_token failed: ' . $e->getMessage());
+            }
+        }
+
+        if (!Database::hasColumn('logininfo', 'reset_expires')) {
+            try {
+                Database::execute(
+                    "ALTER TABLE logininfo ADD COLUMN reset_expires DATETIME NULL AFTER reset_token"
+                );
+            } catch (Exception $e) {
+                error_log('Auth::ensurePasswordResetColumns reset_expires failed: ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Create and email a password-reset token. Returns true even when the user
+     * doesn't exist so the UI can show the generic success message.
+     */
+    public static function requestPasswordReset(string $loginName, string $email, string &$error): bool
+    {
+        $loginName = trim($loginName);
+        $email     = trim($email);
+
+        if ($loginName === '' || $email === '') {
+            $error = 'Please enter both your username and email address.';
+            return false;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = 'Please enter a valid email address.';
+            return false;
+        }
+
+        self::ensurePasswordResetColumns();
+
+        if (!Database::hasColumn('logininfo', 'reset_token') || !Database::hasColumn('logininfo', 'reset_expires')) {
+            $error = 'Password reset is not configured for this installation. Please contact the administrator.';
+            return false;
+        }
+
+        $row = Database::fetchOne(
+            "SELECT LoginInfoId, LoginName, EMail
+               FROM logininfo
+              WHERE LoginName = ? AND (Email = ? OR EMail = ?) AND Active = 'Y'
+              LIMIT 1",
+            [$loginName, $email, $email]
+        );
+
+        if (!$row) {
+            return true;
+        }
+
+        $token   = bin2hex(random_bytes(32));
+        $expires = date('Y-m-d H:i:s', time() + 3600);
+
+        Database::execute(
+            "UPDATE logininfo SET reset_token = ?, reset_expires = ? WHERE LoginInfoId = ?",
+            [$token, $expires, (int)$row['LoginInfoId']]
+        );
+
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        $baseDir = rtrim(dirname($uri), '/');
+        if ($baseDir === '' || $baseDir === '.') {
+            $baseDir = '';
+        }
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $resetLink = $scheme . '://' . $host . $baseDir . '/reset-password.php?token=' . urlencode($token);
+
+        $body = "Dear " . htmlspecialchars($row['LoginName']) . ",\r\n\r\n"
+              . "Click the link below to reset your password (valid 1 hour):\r\n"
+              . $resetLink . "\r\n\r\nIf you did not request this, ignore this email.\r\n";
+
+        Mailer::sendPlainText($email, 'Password Reset - ' . APP_NAME, $body, $row['LoginName']);
+        return true;
+    }
+
+    /**
+     * Return a reset record when the token exists and has not expired.
+     */
+    public static function validatePasswordResetToken(string $token): ?array
+    {
+        $token = trim($token);
+        if ($token === '') {
+            return null;
+        }
+
+        self::ensurePasswordResetColumns();
+        if (!Database::hasColumn('logininfo', 'reset_token') || !Database::hasColumn('logininfo', 'reset_expires')) {
+            return null;
+        }
+
+        $row = Database::fetchOne(
+            "SELECT LoginInfoId, LoginName, reset_expires
+               FROM logininfo
+              WHERE reset_token = ?
+              LIMIT 1",
+            [$token]
+        );
+
+        if (!$row) {
+            return null;
+        }
+
+        if (empty($row['reset_expires']) || strtotime($row['reset_expires']) < time()) {
+            Database::execute(
+                "UPDATE logininfo SET reset_token = NULL, reset_expires = NULL WHERE LoginInfoId = ?",
+                [(int)$row['LoginInfoId']]
+            );
+            return null;
+        }
+
+        return $row;
+    }
+
+    /**
+     * Complete a password reset using a valid token.
+     */
+    public static function completePasswordReset(string $token, string $newPassword, string $confirmPassword, string &$error): bool
+    {
+        $token = trim($token);
+        $newPassword = (string)$newPassword;
+        $confirmPassword = (string)$confirmPassword;
+
+        $row = self::validatePasswordResetToken($token);
+        if (!$row) {
+            $error = 'This password reset link is invalid or has expired.';
+            return false;
+        }
+
+        if ($newPassword === '') {
+            $error = 'Please enter a new password.';
+            return false;
+        }
+
+        if (strlen($newPassword) < 8) {
+            $error = 'Password must be at least 8 characters.';
+            return false;
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            $error = 'Passwords do not match.';
+            return false;
+        }
+
+        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+        try {
+            Database::execute(
+                "UPDATE logininfo
+                    SET Password = ?, reset_token = NULL, reset_expires = NULL,
+                        failed_attempts = 0, locked_until = NULL
+                  WHERE LoginInfoId = ?",
+                [$hash, (int)$row['LoginInfoId']]
+            );
+
+            if (Database::hasColumn('logininfo', 'MustChangePassword')) {
+                Database::execute(
+                    "UPDATE logininfo SET MustChangePassword = 0 WHERE LoginInfoId = ?",
+                    [(int)$row['LoginInfoId']]
+                );
+            }
+        } catch (Exception $e) {
+            error_log('Auth::completePasswordReset failed: ' . $e->getMessage());
+            $error = 'Could not update your password. Please try again.';
+            return false;
+        }
+
+        return true;
+    }
+
     // ── CSRF ───────────────────────────────────────────────────────────────────
 
     public static function csrfToken(): string

@@ -53,6 +53,7 @@ $finalAmount = $result['final'];
 /* Razorpay credentials from config */
 $rzpKeyId     = defined('RZP_KEY_ID')     ? RZP_KEY_ID     : getenv('RZP_KEY_ID');
 $rzpKeySecret = defined('RZP_KEY_SECRET') ? RZP_KEY_SECRET : getenv('RZP_KEY_SECRET');
+$sslVerify    = defined('CURL_SSL_VERIFY') ? (bool)CURL_SSL_VERIFY : filter_var(getenv('CURL_SSL_VERIFY') ?: 'false', FILTER_VALIDATE_BOOLEAN);
 
 if (!$rzpKeyId || !$rzpKeySecret) {
     echo json_encode(['error' => 'Payment gateway not configured. Contact administrator.']);
@@ -95,10 +96,17 @@ curl_setopt_array($ch, [
     CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
     CURLOPT_USERPWD        => $rzpKeyId . ':' . $rzpKeySecret,
     CURLOPT_TIMEOUT        => 15,
+    CURLOPT_SSL_VERIFYPEER => $sslVerify,
+    CURLOPT_SSL_VERIFYHOST => $sslVerify ? 2 : 0,
 ]);
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+
+if ($response === false) {
+    $curlErr = curl_error($ch);
+    echo json_encode(['error' => 'Payment gateway request failed: ' . $curlErr]);
+    exit;
+}
 
 if ($httpCode !== 200) {
     $err = json_decode($response, true);

@@ -75,8 +75,8 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.use_trans_sid',    0);
 
     // Stronger session ID (PHP 7.1+)
-    ini_set('session.sid_length',        48);
-    ini_set('session.sid_bits_per_character', 6);
+    // ini_set('session.sid_length',        48);
+    // ini_set('session.sid_bits_per_character', 6);
 
     session_start();
 }
@@ -88,7 +88,51 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);   // ← change to 0 in production
 ini_set('log_errors',     1);
 
-// ── 4. Constants ──────────────────────────────────────────────────────────────
+// ── 4. Environment bootstrap ───────────────────────────────────────────────
+if (!function_exists('load_dotenv')) {
+    function load_dotenv(string $path): void
+    {
+        if (!is_file($path)) {
+            return;
+        }
+
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            return;
+        }
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            if ($trimmed === '' || str_starts_with($trimmed, '#') || str_starts_with($trimmed, ';')) {
+                continue;
+            }
+
+            $parts = explode('=', $trimmed, 2);
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+
+            if (preg_match('/^(?:["\'])?(.*?)(?:["\'])?$/', $value, $m)) {
+                $value = $m[1];
+            }
+
+            if ($key === '') {
+                continue;
+            }
+
+            putenv($key . '=' . $value);
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
+load_dotenv(dirname(__DIR__) . '/.env');
+
+// ── 5. Constants ──────────────────────────────────────────────────────────────
 // Database
 // Prefer the new env names used by the deployment setup, but keep the legacy
 // DB_NAME / DB_USER / DB_PASS aliases so the existing app code keeps working.
@@ -158,8 +202,9 @@ define('TRANSLATE_API_KEY', getenv('TRANSLATE_API_KEY') ?: '');
 define('API_PUBLIC_BASE_URL', getenv('API_PUBLIC_BASE_URL') ?: 'http://10.0.2.2/Exam');
 
 // Razorpay payment gateway (set via environment variables in production)
-define('RZP_KEY_ID',     getenv('RZP_KEY_ID')     ?: '');
-define('RZP_KEY_SECRET', getenv('RZP_KEY_SECRET') ?: '');
+define('RZP_KEY_ID',     getenv('RZP_KEY_ID')     ?: 'rzp_live_TSV8Uyr2Z4KaUB');
+define('RZP_KEY_SECRET', getenv('RZP_KEY_SECRET') ?: 'b7JeD1Ui0PtfX40OUsBDYXZK');
+define('CURL_SSL_VERIFY', filter_var(getenv('CURL_SSL_VERIFY') ?: 'false', FILTER_VALIDATE_BOOLEAN));
 
 // ── 5. Static asset cache-busting ───────────────────────────────────────────
 // assets/*.css and assets/*.js are served with a 1-year "immutable"
@@ -195,5 +240,6 @@ if (!function_exists('asset_version')) {
     }
 }
 
-// ── 6. Autoload Database class ────────────────────────────────────────────────
+// ── 6. Autoload shared model classes ────────────────────────────────────────
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/AppSettings.php';

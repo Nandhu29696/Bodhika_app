@@ -15,28 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSend'])) {
 
     if ($uname === '' || $email === '') {
         $msg = 'Please enter both your username and email address.'; $isErr = true;
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $msg = 'Please enter a valid email address.'; $isErr = true;
+    } elseif (!Auth::requestPasswordReset($uname, $email, $msg)) {
+        $isErr = true;
     } else {
-        $row = Database::fetchOne(
-            "SELECT LoginInfoId, LoginName FROM logininfo
-              WHERE LoginName = ? AND (Email = ? OR EMail = ?) AND Active = 'Y' LIMIT 1",
-            [$uname, $email, $email]);
-        if ($row) {
-            $token   = bin2hex(random_bytes(32));
-            $expires = date('Y-m-d H:i:s', time() + 3600);
-            Database::execute(
-                "UPDATE logininfo SET reset_token = ?, reset_expires = ? WHERE LoginInfoId = ?",
-                [$token, $expires, $row['LoginInfoId']]);
-            $resetLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']==='on' ? 'https' : 'http')
-                . '://' . $_SERVER['HTTP_HOST']
-                . rtrim(dirname($_SERVER['REQUEST_URI']), '/')
-                . '/reset-password.php?token=' . urlencode($token);
-            $body = "Dear " . htmlspecialchars($row['LoginName']) . ",\r\n\r\n"
-                  . "Click the link below to reset your password (valid 1 hour):\r\n"
-                  . $resetLink . "\r\n\r\nIf you did not request this, ignore this email.\r\n";
-            Mailer::sendPlainText($email, 'Password Reset - ' . APP_NAME, $body, $row['LoginName']);
-        }
         $msg = 'If that account exists, a reset link has been sent to the email on file.';
     }
 }

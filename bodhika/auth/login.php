@@ -25,6 +25,8 @@ if (isset($_GET['timeout'])) {
     $warning = 'Your session expired after 15 minutes of inactivity. Please sign in again.';
 } elseif (isset($_GET['kicked'])) {
     $warning = 'You were signed out because your account was accessed from another location.';
+} elseif (isset($_GET['reset'])) {
+    $success = 'Your password has been reset successfully. Please sign in with your new password.';
 }
 
 // Flash message from register.php redirect
